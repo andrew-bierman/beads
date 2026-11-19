@@ -228,6 +228,17 @@ type VersionChange struct {
 // versionChanges contains agent-actionable changes for recent versions
 var versionChanges = []VersionChange{
 	{
+		Version: "1.4.0-rc.4",
+		Date:    "2026-11-19",
+		Changes: []string{
+			"RC: fourth candidate for 1.4.0: rc.3 plus the Go library's proxied-server open. No new migration: upgrading from 1.4.0-rc.1, rc.2 or rc.3 is a binary swap; from 1.3.x the consented migration and every 1.4.0-rc.3, rc.2 and rc.1 entry below still apply. bd commands open proxied-server workspaces as in rc.3. Published as a GitHub prerelease only (Homebrew, npm and PyPI stay on 1.3.4); install 1.4.0 by hand when it ships, as the 1.4.0-rc.3 entry describes.",
+			"UPGRADE: Go programs: beads.OpenBestAvailable and OpenBestAvailableWith (cgo and CGO_ENABLED=0) open a proxied-server workspace through its bd proxy: a running proxy is adopted, else one is started from 'bd' on PATH (never the host executable); with no bd on PATH, or with a proxy a bd older than 1.4 started (left running, not stopped; upgrade bd on PATH and run a bd command in the workspace, or wait for its idle exit), the open fails with the new beads.ErrProxyUnavailable and creates no embedded store. A managed-local workspace also needs dolt on PATH (or BEADS_DOLT_BIN), even to adopt a proxy. Close leaves the proxy running. BEADS_DOLT_SERVER_MODE=1 or BEADS_DOLT_SHARED_SERVER plus a port in BEADS_DOLT_SERVER_PORT keeps the direct server arm at that port; forced server mode without a named port goes through the proxy. Open, OpenFromConfig and OpenGated are unchanged. New exported aliases: beads.SchemaSkewError, RemoteMigrateGateError, MigrateConsentError (#8558).",
+			"UPGRADE: the proxied-server store is not a DoltStore: methods outside the issue, label, dependency, comment, config, local-metadata, ready-work, blocked, statistics and claim sets and RunInTransaction (callback runs once) return a typed beads.ErrUnsupported with backend proxied-server; AsEventQuerier and AsDependentQuerier report false; Dolt commits carry no --author; UnderlyingDB()/DB() bypass hooks and the events journal; a flat create that fails empties the IDs it filled, which DoltStore in 1.4.0 does not. See engdocs/EMBEDDING_OVER_PROXIED_SERVER.md section 8 (#8558).",
+			"FIX: OpenBestAvailable on a proxied-server workspace no longer returns no error while creating a new, empty embedded database at .beads/embeddeddolt (cgo) or failing with the embedded-requires-CGO error (CGO_ENABLED=0); an existing stray .beads/embeddeddolt is left on disk and no longer opened (#8323, #8558).",
+			"KNOWN: the 1.4.0-rc.2 and rc.1 known issues still apply, except the 1.4.0-rc.2 entry that a Go program linking beads cannot open a proxied-server workspace (#8412, #8323), which rc.4 fixes.",
+		},
+	},
+	{
 		Version: "1.4.0-rc.3",
 		Date:    "2026-11-18",
 		Changes: []string{
